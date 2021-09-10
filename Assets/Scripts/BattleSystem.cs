@@ -7,7 +7,7 @@ public enum BattleState { START, P1TURN, P2TURN, P1WIN, P2WIN}
 public class BattleSystem : MonoBehaviour
 {
     public GameObject Player1, Player2;
-
+    [HideInInspector] public bool normalPlayed = false;
     public BattleState state;
 
     void Start()

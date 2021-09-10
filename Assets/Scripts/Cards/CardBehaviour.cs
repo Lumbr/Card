@@ -8,15 +8,22 @@ public class CardBehaviour : MonoBehaviour
     public Card card;
     public TMP_Text title, description;
     public Image art;
-    void Start()
+    internal bool special;
+    BattleSystem battleSystem;
+    virtual public void Start()
     {
         title.text = card.name;
         description.text = card.description;
         art.sprite = card.art;
+        battleSystem = FindObjectOfType<BattleSystem>();
     }
-    public void Play()
+    virtual public void Play()
     {
-        
+        if (!special) 
+        {
+            if (battleSystem.normalPlayed) return;
+            battleSystem.normalPlayed = true; 
+        }
     }
 
 }
