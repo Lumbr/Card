@@ -9,9 +9,11 @@ public class CardBehaviour : MonoBehaviour
     public TMP_Text title, description;
     public Image art;
     internal bool special;
-    BattleSystem battleSystem;
+    internal BattleSystem battleSystem;
+    Player player;
     virtual public void Start()
     {
+        player = GetComponentInParent<Player>();
         title.text = card.name;
         description.text = card.description;
         art.sprite = card.art;
@@ -19,11 +21,7 @@ public class CardBehaviour : MonoBehaviour
     }
     virtual public void Play()
     {
-        if (!special) 
-        {
-            if (battleSystem.normalPlayed) return;
-            battleSystem.normalPlayed = true; 
-        }
+        
     }
 
 }
