@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,23 +6,22 @@ using TMPro;
 using UnityEngine.UI;
 public class CardBehaviour : MonoBehaviour
 {
+    public sbyte team;
     public Card card;
     public TMP_Text title, description;
     public Image art;
-    internal bool special;
-    internal BattleSystem battleSystem;
-    Player player;
-    virtual public void Start()
+    bool start = true;
+    public void Update()
     {
-        player = GetComponentInParent<Player>();
-        title.text = card.name;
-        description.text = card.description;
-        art.sprite = card.art;
-        battleSystem = FindObjectOfType<BattleSystem>();
+        if(start && card)
+        {
+            title.text = card.name;
+            description.text = card.description;
+            art.sprite = card.art;
+            gameObject.AddComponent(Type.GetType(card.effect));
+            start = false;
+        }
     }
-    virtual public void Play()
-    {
-        
-    }
+
 
 }

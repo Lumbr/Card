@@ -9,7 +9,7 @@ public class BattleSystem : MonoBehaviour
     public Player Player1, Player2;
     public List<GameObject> xs, os;
     public BattleState state;
-    public sbyte[,] grid = new sbyte[,] { 
+    public sbyte[,] grid = new sbyte[,] {
                                             {0,0,0},
                                             {0,0,0},
                                             {0,0,0}};
@@ -21,9 +21,9 @@ public class BattleSystem : MonoBehaviour
     private void Update()
     {
         byte count = 0;
-        foreach(sbyte sign in grid)
+        foreach (sbyte sign in grid)
         {
-            switch(sign)
+            switch (sign)
             {
                 case 0:
                     xs[count].SetActive(false);
@@ -49,35 +49,38 @@ public class BattleSystem : MonoBehaviour
                 Player2.Turn();
                 break;
         }
-        if (grid == new sbyte[3, 3] { { 1, 1, 1 }, { 0, 0, 0 }, { 0, 0, 0 } }) state = BattleState.P1WIN;
-        else if (grid == new sbyte[3, 3] { { 0, 0, 0 }, { 1, 1, 1 }, { 0, 0, 0 } }) state = BattleState.P1WIN;
-        else if (grid == new sbyte[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 1, 1, 1 } }) state = BattleState.P1WIN;
-        else if (grid == new sbyte[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } }) state = BattleState.P1WIN;
-        else if (grid == new sbyte[3, 3] { { 0, 0, 1 }, { 0, 1, 0 }, { 1, 0, 0 } }) state = BattleState.P1WIN;
-        else if (grid == new sbyte[3, 3] { { 1, 0, 0 }, { 1, 0, 0 }, { 1, 0, 0 } }) state = BattleState.P1WIN;
-        else if (grid == new sbyte[3, 3] { { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 } }) state = BattleState.P1WIN;
-        else if (grid == new sbyte[3, 3] { { 0, 0, 1 }, { 0, 0, 1 }, { 0, 0, 1 } }) state = BattleState.P1WIN;
-        else if (grid == new sbyte[3, 3] { { -1, -1, -1 }, { 0, 0, 0 }, { 0, 0, 0 } }) state = BattleState.P2WIN;
-        else if (grid == new sbyte[3, 3] { { 0, 0, 0 }, { -1, -1, -1 }, { 0, 0, 0 } }) state = BattleState.P2WIN;
-        else if (grid == new sbyte[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { -1, -1, -1 } }) state = BattleState.P2WIN;
-        else if (grid == new sbyte[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } }) state = BattleState.P2WIN;
-        else if (grid == new sbyte[3, 3] { { 0, 0, -1 }, { 0, -1, 0 }, { -1, 0, 0 } }) state = BattleState.P2WIN;
-        else if (grid == new sbyte[3, 3] { { -1, 0, 0 }, { -1, 0, 0 }, { -1, 0, 0 } }) state = BattleState.P2WIN;
-        else if (grid == new sbyte[3, 3] { { 0, -1, 0 }, { 0, -1, 0 }, { 0, -1, 0 } }) state = BattleState.P2WIN;
-        else if (grid == new sbyte[3, 3] { { 0, 0, -1 }, { 0, 0, -1 }, { 0, 0, -1 } }) state = BattleState.P2WIN;
+        if (grid == new sbyte[3, 3] { { 1, 1, 1 }, { 0, 0, 0 }, { 0, 0, 0 } }
+            || grid == new sbyte[3, 3] { { 0, 0, 0 }, { 1, 1, 1 }, { 0, 0, 0 } }
+            || grid == new sbyte[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 1, 1, 1 } }
+            || grid == new sbyte[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } }
+            || grid == new sbyte[3, 3] { { 0, 0, 1 }, { 0, 1, 0 }, { 1, 0, 0 } }
+            || grid == new sbyte[3, 3] { { 1, 0, 0 }, { 1, 0, 0 }, { 1, 0, 0 } }
+            || grid == new sbyte[3, 3] { { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 } }
+            || grid == new sbyte[3, 3] { { 0, 0, 1 }, { 0, 0, 1 }, { 0, 0, 1 } })
+            state = BattleState.P1WIN;
+        if (grid == new sbyte[3, 3] { { -1, -1, -1 }, { 0, 0, 0 }, { 0, 0, 0 } }
+            || grid == new sbyte[3, 3] { { 0, 0, 0 }, { -1, -1, -1 }, { 0, 0, 0 } }
+            || grid == new sbyte[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { -1, -1, -1 } }
+            || grid == new sbyte[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } }
+            || grid == new sbyte[3, 3] { { 0, 0, -1 }, { 0, -1, 0 }, { -1, 0, 0 } }
+            || grid == new sbyte[3, 3] { { -1, 0, 0 }, { -1, 0, 0 }, { -1, 0, 0 } }
+            || grid == new sbyte[3, 3] { { 0, -1, 0 }, { 0, -1, 0 }, { 0, -1, 0 } }
+            || grid == new sbyte[3, 3] { { 0, 0, -1 }, { 0, 0, -1 }, { 0, 0, -1 } })
+            state = BattleState.P2WIN;
     }
     void SetupBattle()
     {
-        state = BattleState.P1TURN;
-        //if (Random.Range(1, 3) == 1) state = BattleState.P1TURN;
-        //else state = BattleState.P2TURN;
-    }
-    void Player1Turn()
-    {
-        //Player2Turn();
-    }
-    void Player2Turn()
-    {
-        //Player1Turn();
+        Player1.Draw(2);
+        Player2.Draw(2);
+        if (Random.Range(1, 3) == 1)
+        {
+            Player1.normalPlayed = true;
+            state = BattleState.P1TURN;
+        }
+        else
+        {
+            Player2.normalPlayed = true;
+            state = BattleState.P2TURN;
+        }
     }
 }
