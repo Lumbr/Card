@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public abstract class CardEffect : MonoBehaviour
+public abstract class CardEffect : NetworkBehaviour
 {
     internal bool special;
     internal BattleSystem battleSystem;
