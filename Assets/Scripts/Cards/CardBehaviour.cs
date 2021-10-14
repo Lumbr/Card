@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using Mirror;
-public class CardBehaviour : NetworkBehaviour
+public class CardBehaviour : MonoBehaviour
 {
     public sbyte team;
     public Card card;
