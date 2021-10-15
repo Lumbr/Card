@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class Player : MonoBehaviour
 {
+    PhotonView view;
     public Button endTurn;
     public sbyte team;
     public CardBehaviour cardPrefab;
@@ -19,9 +21,15 @@ public class Player : MonoBehaviour
     {
         if (team == 1) GetComponent<Animator>().runtimeAnimatorController = player1;
         else if (team == -1) GetComponent<Animator>().runtimeAnimatorController = player2;
+        view = GetComponent<PhotonView>();
     }
     private void Update()
     {
+        if (!view.IsMine)
+        {
+            GetComponent<Camera>().enabled = false;
+            GetComponent<AudioListener>().enabled = false;
+        }
         if (cardsInHand.Count <= 0) return;
         float count = 0;
         foreach(GameObject card in cardsInHand)
@@ -34,6 +42,7 @@ public class Player : MonoBehaviour
     }
     public void Draw(byte amount)
     {
+        //if (!view.IsMine) return;
         endTurn.GetComponent<EndTurn>().team = team;
         if (cardsInDeck.Count >= amount)
         {
@@ -49,10 +58,11 @@ public class Player : MonoBehaviour
     }
     public void Turn()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if(!view.IsMine) return;
+        Ray ray = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            if (Input.GetMouseButtonDown(0) && hit.collider.gameObject.GetComponent<CardEffect>())
+            if (Input.GetMouseButtonDown(0) && hit.collider.gameObject.GetComponent<CardEffect>() && cardsInHand.Contains(hit.collider.gameObject))
             {
                 cardInPlay = hit.collider.gameObject.GetComponent<CardEffect>();
                 if (normalPlayed && !cardInPlay.special) { playing = false; return; }
