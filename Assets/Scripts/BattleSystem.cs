@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public enum BattleState { WAITING, START, P1TURN, P2TURN, P1WIN, P2WIN}
 

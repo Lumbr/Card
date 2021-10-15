@@ -58,7 +58,7 @@ public class Player : MonoBehaviour
     }
     public void Turn()
     {
-        if(!view.IsMine) return;
+        //if(!view.IsMine) return;
         Ray ray = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
