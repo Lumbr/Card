@@ -1,35 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
+using static VladsUsefulScripts.Finders;
+using UnityEngine.SceneManagement;
 
 public enum BattleState { WAITING, START, P1TURN, P2TURN, P1WIN, P2WIN}
 
 public class BattleSystem : MonoBehaviour
 {
+    public string p1Win, p2Win;
     public Player player1, player2;
     public List<GameObject> xs, os;
     public BattleState state = BattleState.WAITING;
-    public sbyte[,] grid = new sbyte[,] {
+    public byte[,] grid = new byte[3,3] {
                                             {0,0,0},
                                             {0,0,0},
                                             {0,0,0}};
+    
 
     private void FixedUpdate()
     {
-        if (state == BattleState.WAITING && player1 != null && player2 != null)
+        if(state == BattleState.WAITING)
         {
-            state = BattleState.START;
+            if (player1 != null && player2 != null)
+            {
+                state = BattleState.START;
+            }
+            else if (TryFindObjectsOfType(out Player[] players) ? players.Length == 2 : false)
+            {
+                player1 = players[0];
+                player2 = players[1];
+            }
         }
-        else if(FindObjectsOfType<Player>().Length == 2 && state == BattleState.WAITING)
-        {
-            player1 = FindObjectsOfType<Player>()[0].team == 1 ? FindObjectsOfType<Player>()[0] : FindObjectsOfType<Player>()[1];
-            player2 = FindObjectsOfType<Player>()[0].team == -1 ? FindObjectsOfType<Player>()[0] : FindObjectsOfType<Player>()[1];
-        }
+        
         
         if (state == BattleState.START) SetupBattle();
         byte count = 0;
-        foreach (sbyte sign in grid)
+        foreach (byte sign in grid)
         {
             switch (sign)
             {
@@ -41,7 +48,7 @@ public class BattleSystem : MonoBehaviour
                     xs[count].SetActive(true);
                     os[count].SetActive(false);
                     break;
-                case -1:
+                case 2:
                     xs[count].SetActive(false);
                     os[count].SetActive(true);
                     break;
@@ -52,27 +59,50 @@ public class BattleSystem : MonoBehaviour
         switch (state)
         {
             case BattleState.P1TURN:
+                player1.GetComponent<Camera>().enabled = true;
+                player2.GetComponent<Camera>().enabled = false; 
+                player1.GetComponent<AudioListener>().enabled = true;
+                player2.GetComponent<AudioListener>().enabled = false;
+                player1.endTurn.gameObject.SetActive(true);
+                player2.endTurn.gameObject.SetActive(false);
+                player2.startTurn = true;
+                player2.normalPlayed = false;
                 player1.Turn();
                 break;
             case BattleState.P2TURN:
+                player1.GetComponent<Camera>().enabled = false;
+                player2.GetComponent<Camera>().enabled = true; 
+                player1.GetComponent<AudioListener>().enabled = false;
+                player2.GetComponent<AudioListener>().enabled = true;
+                player1.endTurn.gameObject.SetActive(false);
+                player2.endTurn.gameObject.SetActive(true);
+                player1.startTurn = true;
+                player1.normalPlayed = false;
                 player2.Turn();
+                break;
+            case BattleState.P1WIN:
+                SceneManager.LoadScene(p1Win);
+                break;
+            case BattleState.P2WIN:
+                SceneManager.LoadScene(p2Win);
                 break;
         }
 
         if (CheckGrid(1)) state = BattleState.P1WIN;
-        if (CheckGrid(-1)) state = BattleState.P2WIN;
+        if (CheckGrid(2)) state = BattleState.P2WIN;
         
     }
-    bool CheckGrid(sbyte symbol)
+    bool CheckGrid(byte symbol)
     {
-        if (   grid == new sbyte[3, 3] { { symbol, symbol, symbol }, { grid[0, 1], grid[1, 1], grid[2, 1] }, { grid[0, 2], grid[1, 2], grid[2, 2] } }
-            || grid == new sbyte[3, 3] { { grid[0, 0], grid[1, 0], grid[2, 0] }, { symbol, symbol, symbol }, { grid[0, 2], grid[1, 2], grid[2, 2] } }
-            || grid == new sbyte[3, 3] { { grid[0, 0], grid[1, 0], grid[2, 0] }, { grid[0, 1], grid[1, 1], grid[2, 1] }, { symbol, symbol, symbol } }
-            || grid == new sbyte[3, 3] { { symbol, grid[1, 0], grid[2, 0] }, { grid[0, 1], symbol, grid[2, 1] }, { grid[0, 2], grid[1, 2], symbol } }
-            || grid == new sbyte[3, 3] { { grid[0, 0], grid[1, 0], symbol }, { grid[0, 1], symbol, grid[2, 1] }, { symbol, grid[1, 2], grid[2, 2] } }
-            || grid == new sbyte[3, 3] { { symbol, grid[1, 0], grid[2, 0] }, { symbol, grid[1, 1], grid[2, 1] }, { symbol, grid[1, 2], grid[2, 2] } }
-            || grid == new sbyte[3, 3] { { grid[0, 0], symbol, grid[2, 0] }, { grid[0, 1], symbol, grid[2, 1] }, { grid[0, 2], symbol, grid[2, 2] } }
-            || grid == new sbyte[3, 3] { { grid[0, 0], grid[1, 0], symbol }, { grid[0, 1], grid[1, 1], symbol }, { grid[0, 2], grid[1, 2], symbol } })
+        if (grid[0, 0] == symbol && grid[1, 0] == symbol && grid[2, 0] == symbol ||
+            grid[0, 1] == symbol && grid[1, 1] == symbol && grid[2, 1] == symbol ||
+            grid[0, 2] == symbol && grid[1, 2] == symbol && grid[2, 2] == symbol ||
+            grid[0, 0] == symbol && grid[1, 0] == symbol && grid[2, 0] == symbol ||
+            grid[0, 0] == symbol && grid[1, 1] == symbol && grid[2, 1] == symbol ||
+            grid[0, 0] == symbol && grid[1, 1] == symbol && grid[2, 1] == symbol ||
+            grid[0, 0] == symbol && grid[1, 1] == symbol && grid[2, 2] == symbol ||
+            grid[0, 2] == symbol && grid[1, 1] == symbol && grid[2, 0] == symbol)
+
             return true;
         else return false;
 
@@ -80,7 +110,7 @@ public class BattleSystem : MonoBehaviour
     void SetupBattle()
     {
         player1.team = 1;
-        player2.team = -1;
+        player2.team = 2;
         player1.Draw(2);
         player1.Awake();
         player2.Draw(2);

@@ -3,33 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
-using Photon.Pun;
 
 public class Player : MonoBehaviour
 {
-    PhotonView view;
-    public Button endTurn;
-    public sbyte team;
+    public EndTurn endTurn;
+    public byte team;
     public CardBehaviour cardPrefab;
     public List<Card> cardsInDeck;
     public List<GameObject> cardsInHand;
     CardEffect cardInPlay;
-    [HideInInspector] public bool normalPlayed = false;
-    [HideInInspector] public bool playing = false;
+    public bool normalPlayed = false, playing = false, startTurn = false;
     public RuntimeAnimatorController player1, player2;
     public void Awake()
     {
         if (team == 1) GetComponent<Animator>().runtimeAnimatorController = player1;
-        else if (team == -1) GetComponent<Animator>().runtimeAnimatorController = player2;
-        view = GetComponent<PhotonView>();
+        else if (team == 2) GetComponent<Animator>().runtimeAnimatorController = player2;
     }
     private void Update()
     {
-        if (!view.IsMine)
-        {
-            GetComponent<Camera>().enabled = false;
-            GetComponent<AudioListener>().enabled = false;
-        }
         if (cardsInHand.Count <= 0) return;
         float count = 0;
         foreach(GameObject card in cardsInHand)
@@ -42,8 +33,7 @@ public class Player : MonoBehaviour
     }
     public void Draw(byte amount)
     {
-        //if (!view.IsMine) return;
-        endTurn.GetComponent<EndTurn>().team = team;
+        Awake();
         if (cardsInDeck.Count >= amount)
         {
             for(int i = 1; i <= amount; i++)
@@ -55,10 +45,19 @@ public class Player : MonoBehaviour
                 cardsInDeck.Remove(cardsInDeck.Last());
             }
         }
+        else
+        {
+            if (team == 1) FindObjectOfType<BattleSystem>().state = BattleState.P2WIN;
+            else if (team == 2) FindObjectOfType<BattleSystem>().state = BattleState.P1WIN;
+        }
     }
     public void Turn()
     {
-        //if(!view.IsMine) return;
+        if (startTurn)
+        {
+            Draw(1);
+            startTurn = false;
+        }
         Ray ray = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
@@ -74,4 +73,5 @@ public class Player : MonoBehaviour
             cardInPlay.Play();
         }
     }
+
 }

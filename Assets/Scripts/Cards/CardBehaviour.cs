@@ -6,11 +6,12 @@ using TMPro;
 using UnityEngine.UI;
 public class CardBehaviour : MonoBehaviour
 {
-    public sbyte team;
+    public byte team;
     public Card card;
     public TMP_Text title, description;
     public Image art;
     bool start = true;
+
     public void Update()
     {
         if(start && card)

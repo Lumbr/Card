@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class EndTurn : MonoBehaviour
 {
-    public sbyte team;
+    public Player player;
     public void OnButtonClick()
     {
-        if(team == 1)
+        Debug.Log(player.team);
+        if(player.team == 1)
         {
             FindObjectOfType<BattleSystem>().state = BattleState.P2TURN;
         }
         else
         {
-            FindObjectOfType<BattleSystem>().state = BattleState.P2TURN;
+            FindObjectOfType<BattleSystem>().state = BattleState.P1TURN;
         }
     }
 }
