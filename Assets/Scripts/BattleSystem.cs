@@ -109,8 +109,6 @@ public class BattleSystem : MonoBehaviour
     }
     void SetupBattle()
     {
-        player1.team = 1;
-        player2.team = 2;
         player1.Draw(2);
         player1.Awake();
         player2.Draw(2);

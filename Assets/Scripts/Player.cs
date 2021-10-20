@@ -58,20 +58,23 @@ public class Player : MonoBehaviour
             Draw(1);
             startTurn = false;
         }
-        Ray ray = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Input.GetMouseButtonDown(0))
         {
-            if (Input.GetMouseButtonDown(0) && hit.collider.gameObject.GetComponent<CardEffect>() && cardsInHand.Contains(hit.collider.gameObject))
+            if (Physics.Raycast(GetComponent<Camera>().ScreenPointToRay(Input.mousePosition), out RaycastHit hit, Mathf.Infinity))
             {
-                cardInPlay = hit.collider.gameObject.GetComponent<CardEffect>();
-                if (normalPlayed && !cardInPlay.special) { playing = false; return; }
-                playing = true;
+                if (hit.collider.gameObject.GetComponent<CardEffect>() && cardsInHand.Contains(hit.collider.gameObject))
+                {
+                    cardInPlay = hit.collider.gameObject.GetComponent<CardEffect>();
+                    if (normalPlayed && !cardInPlay.special) { playing = false; return; }
+                    playing = true;
+                }
+            }
+            if (cardInPlay && playing)
+            {
+                cardInPlay.Play();
             }
         }
-        if (cardInPlay && playing)
-        {
-            cardInPlay.Play();
-        }
+        
     }
 
 }
