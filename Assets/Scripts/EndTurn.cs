@@ -7,7 +7,7 @@ public class EndTurn : MonoBehaviour
     public Player player;
     public void OnButtonClick()
     {
-        Debug.Log(player.team);
+        if (player.playing) return;
         if(player.team == 1)
         {
             FindObjectOfType<BattleSystem>().state = BattleState.P2TURN;

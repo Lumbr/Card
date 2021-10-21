@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Place X
   m_EditorClassIdentifier: 
   name: Place X
-  description: Place an X in your chosen spot
+  description: 'Normal: Place an X in your chosen spot'
   art: {fileID: 21300000, guid: cc43ac3c73f04bc4cb3bee896a3a7750, type: 3}
   effect: Place

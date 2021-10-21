@@ -8,18 +8,18 @@ public class Place : CardEffect
     internal override void Start() { base.Start();  special = false; }
     public override void Play()
     {
-        Camera.main.GetComponent<Animator>().SetBool("Looking", true);
+        player.GetComponent<Animator>().SetBool("Looking", true);
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            if (Input.GetMouseButtonDown(0) && hit.collider.gameObject.GetComponent<PosHolder>())
+            if (Input.GetMouseButton(0) && hit.collider.gameObject.GetComponent<PosHolder>())
             {
                 if(battleSystem.grid[hit.collider.gameObject.GetComponent<PosHolder>().y - 1, hit.collider.gameObject.GetComponent<PosHolder>().x - 1] == 0)
                 {
                     battleSystem.grid[hit.collider.gameObject.GetComponent<PosHolder>().y - 1, hit.collider.gameObject.GetComponent<PosHolder>().x - 1] = GetComponent<CardBehaviour>().team;
-                    Camera.main.GetComponent<Animator>().SetBool("Looking", false);
-                    Camera.main.GetComponent<Player>().playing = false;
-                    Camera.main.GetComponent<Player>().normalPlayed = true;
+                    player.GetComponent<Animator>().SetBool("Looking", false);
+                    player.GetComponent<Player>().playing = false;
+                    player.GetComponent<Player>().normalPlayed = true;
                     player.cardsInHand.Remove(gameObject);
                     Destroy(gameObject);
                 }

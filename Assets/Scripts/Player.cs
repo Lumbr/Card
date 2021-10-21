@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -18,6 +19,8 @@ public class Player : MonoBehaviour
     {
         if (team == 1) GetComponent<Animator>().runtimeAnimatorController = player1;
         else if (team == 2) GetComponent<Animator>().runtimeAnimatorController = player2;
+        cardsInDeck = cardsInDeck.OrderBy(a => Guid.NewGuid()).ToList();
+        
     }
     private void Update()
     {
@@ -26,7 +29,7 @@ public class Player : MonoBehaviour
         foreach(GameObject card in cardsInHand)
         {
             //card.TryGetComponent(out CardEffect effect);
-            card.transform.localPosition = new Vector3(cardsInHand.Count / 2 - count, -2.5f, 6 + count / 16);
+            card.transform.localPosition = new Vector3(1.7f*(cardsInHand.Count / 2 - count), -2.5f, 6 + count / 16);
             card.transform.localEulerAngles = new Vector3(90 - cardsInHand.Count + count * 2, 270, 90);
             count++;
         }
@@ -58,23 +61,31 @@ public class Player : MonoBehaviour
             Draw(1);
             startTurn = false;
         }
-        if (Input.GetMouseButtonDown(0))
+        if (cardInPlay && playing)
+        {
+            if (Input.GetKey(KeyCode.Escape) || Input.GetMouseButton(1))
+            {
+                GetComponent<Animator>().SetBool("Looking", false);
+                playing = false;
+                return;
+            }
+            cardInPlay.Play();
+            return;
+        }
+        if (Input.GetMouseButton(0))
         {
             if (Physics.Raycast(GetComponent<Camera>().ScreenPointToRay(Input.mousePosition), out RaycastHit hit, Mathf.Infinity))
             {
                 if (hit.collider.gameObject.GetComponent<CardEffect>() && cardsInHand.Contains(hit.collider.gameObject))
                 {
                     cardInPlay = hit.collider.gameObject.GetComponent<CardEffect>();
-                    if (normalPlayed && !cardInPlay.special) { playing = false; return; }
-                    playing = true;
+                    if (normalPlayed && !cardInPlay.special) playing = false;
+                    else playing = true;
                 }
-            }
-            if (cardInPlay && playing)
-            {
-                cardInPlay.Play();
             }
         }
         
+
     }
 
 }

@@ -17,4 +17,5 @@ public class AnimationEvents : MonoBehaviour
             yeet.GetComponent<Rigidbody>().velocity += rand.normalized * 2;
         }
     }
+    public void Deactivate() => gameObject.SetActive(false);
 }

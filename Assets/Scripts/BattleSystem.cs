@@ -12,14 +12,13 @@ public class BattleSystem : MonoBehaviour
     public Player player1, player2;
     public List<GameObject> xs, os;
     public BattleState state = BattleState.WAITING;
-    public byte[,] grid = new byte[3,3] {
-                                            {0,0,0},
-                                            {0,0,0},
-                                            {0,0,0}};
-    
-
+    public byte[,] grid = new byte[3, 3] {
+                                            {0, 0, 0},
+                                            {0, 0, 0},
+                                            {0, 0, 0}}; 
     private void FixedUpdate()
     {
+        
         if(state == BattleState.WAITING)
         {
             if (player1 != null && player2 != null)
@@ -41,15 +40,15 @@ public class BattleSystem : MonoBehaviour
             switch (sign)
             {
                 case 0:
-                    xs[count].SetActive(false);
-                    os[count].SetActive(false);
+                    if (xs[count].activeInHierarchy) xs[count].GetComponent<Animator>().SetBool("Exit", true);
+                    if (os[count].activeInHierarchy) os[count].GetComponent<Animator>().SetBool("Exit", true);
                     break;
                 case 1:
                     xs[count].SetActive(true);
-                    os[count].SetActive(false);
+                    if (os[count].activeInHierarchy) os[count].GetComponent<Animator>().SetBool("Exit", true);
                     break;
                 case 2:
-                    xs[count].SetActive(false);
+                    if (xs[count].activeInHierarchy) xs[count].GetComponent<Animator>().SetBool("Exit", true);
                     os[count].SetActive(true);
                     break;
             }
@@ -90,16 +89,21 @@ public class BattleSystem : MonoBehaviour
 
         if (CheckGrid(1)) state = BattleState.P1WIN;
         if (CheckGrid(2)) state = BattleState.P2WIN;
-        
+        bool draw = true;
+        foreach(byte thing in grid)
+        {
+            if (thing == 0) draw = false;
+        }
+        if (draw) grid = new byte[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
     }
     bool CheckGrid(byte symbol)
     {
         if (grid[0, 0] == symbol && grid[1, 0] == symbol && grid[2, 0] == symbol ||
             grid[0, 1] == symbol && grid[1, 1] == symbol && grid[2, 1] == symbol ||
             grid[0, 2] == symbol && grid[1, 2] == symbol && grid[2, 2] == symbol ||
-            grid[0, 0] == symbol && grid[1, 0] == symbol && grid[2, 0] == symbol ||
-            grid[0, 0] == symbol && grid[1, 1] == symbol && grid[2, 1] == symbol ||
-            grid[0, 0] == symbol && grid[1, 1] == symbol && grid[2, 1] == symbol ||
+            grid[0, 0] == symbol && grid[0, 1] == symbol && grid[0, 2] == symbol ||
+            grid[1, 0] == symbol && grid[1, 1] == symbol && grid[1, 2] == symbol ||
+            grid[2, 0] == symbol && grid[2, 1] == symbol && grid[2, 2] == symbol ||
             grid[0, 0] == symbol && grid[1, 1] == symbol && grid[2, 2] == symbol ||
             grid[0, 2] == symbol && grid[1, 1] == symbol && grid[2, 0] == symbol)
 

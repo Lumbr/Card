@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Place O
   m_EditorClassIdentifier: 
   name: Place O
-  description: Place an O in your chosen spot
+  description: 'Normal: Place an O in your chosen spot'
   art: {fileID: 21300000, guid: 7b149dce98397a24ba565e159dce864b, type: 3}
   effect: Place
