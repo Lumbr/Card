@@ -26,10 +26,12 @@ public class Player : MonoBehaviour
     {
         if (cardsInHand.Count <= 0) return;
         float count = 0;
+        //Debug.Log(Input.mousePosition.y);
         foreach(GameObject card in cardsInHand)
         {
             //card.TryGetComponent(out CardEffect effect);
-            card.transform.localPosition = new Vector3(1.7f*(cardsInHand.Count / 2 - count), -2.5f, 6 + count / 16);
+            if(Input.mousePosition.y <= Screen.height/8) card.transform.localPosition = new Vector3(1.7f*(cardsInHand.Count / 2 - count), -2.3f, 6 + count / 16);
+            else card.transform.localPosition = new Vector3(1.7f*(cardsInHand.Count / 2 - count), -4f, 6 + count / 16);
             card.transform.localEulerAngles = new Vector3(90 - cardsInHand.Count + count * 2, 270, 90);
             count++;
         }
@@ -81,6 +83,8 @@ public class Player : MonoBehaviour
                     cardInPlay = hit.collider.gameObject.GetComponent<CardEffect>();
                     if (normalPlayed && !cardInPlay.special) playing = false;
                     else playing = true;
+                    System.Threading.Thread.Sleep(100);
+                    return;
                 }
             }
         }
